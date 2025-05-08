@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CourseGPT</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f2f5;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 400px;
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .google-btn {
+      background-color: #4285F4;
+    }
+    .google-btn:hover {
+      background-color: #3b78e7;
+    }
+    .error {
+      color: red;
+      margin-bottom: 10px;
+    }
+    .section {
+      margin-top: 20px;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <h2 id="title">CourseGPT - Login</h2>
+    <div id="error" class="error"></div>
+
+    <div id="login-section">
+      <input type="email" id="login-email" placeholder="Email" required>
+      <input type="password" id="login-password" placeholder="Password" required>
+      <button onclick="handleLogin()">Login</button>
+      <button class="google-btn" onclick="handleGoogleLogin()">Sign in with Google</button>
+      <p>Don't have an account? <a href="#" onclick="showSignup()">Sign Up</a></p>
+    </div>
+
+    <div id="signup-section" style="display: none;">
+      <input type="email" id="signup-email" placeholder="Email" required>
+      <input type="password" id="signup-password" placeholder="Password" required>
+      <button onclick="handleSignup()">Sign Up</button>
+      <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+    </div>
+
+    <div id="dashboard-section" style="display: none;" class="section">
+      <h3>Welcome!</h3>
+      <button onclick="handleLogout()">Logout</button>
+      <div class="section">
+        <h4>Generate Lesson</h4>
+        <input type="text" id="lesson-topic" placeholder="Enter topic (e.g., Python Basics)">
+        <input type="text" id="lesson-concept" placeholder="Enter core concept (e.g., Variables)">
+        <button onclick="generateLesson()">Generate Lesson</button>
+        <div id="lesson-output"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000';
+    let token = localStorage.getItem('token') || null;
+
+    function showLogin() {
+      document.getElementById('login-section').style.display = 'block';
+      document.getElementById('signup-section').style.display = 'none';
+      document.getElementById('dashboard-section').style.display = 'none';
+      document.getElementById('title').textContent = 'CourseGPT - Login';
+      document.getElementById('error').textContent = '';
+    }
+
+    function showSignup() {
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('signup-section').style.display = 'block';
+      document.getElementById('dashboard-section').style.display = 'none';
+      document.getElementById('title').textContent = 'CourseGPT - Sign Up';
+      document.getElementById('error').textContent = '';
+    }
+
+    function showDashboard() {
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('signup-section').style.display = 'none';
+      document.getElementById('dashboard-section').style.display = 'block';
+      document.getElementById('title').textContent = 'CourseGPT - Dashboard';
+      document.getElementById('error').textContent = '';
+    }
+
+    async function handleLogin() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const errorDiv = document.getElementById('error');
+
+      try {
+        const response = await fetch(`${API_URL}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(`Login failed: ${response.status} ${text}`);
+        }
+        const data = await response.json();
+        token = data.token;
+        localStorage.setItem('token', token);
+        showDashboard();
+      } catch (err) {
+        errorDiv.textContent = 'Error: ' + err.message;
+      }
+    }
+
+    function handleGoogleLogin() {
+      window.location.href = `${API_URL}/api/auth/google`;
+    }
+
+    async function handleSignup() {
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const errorDiv = document.getElementById('error');
+
+      try {
+        const response = await fetch(`${API_URL}/api/auth/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(`Signup failed: ${response.status} ${text}`);
+        }
+        const data = await response.json();
+        token = data.token;
+        localStorage.setItem('token', token);
+        showDashboard();
+      } catch (err) {
+        errorDiv.textContent = 'Error: ' + err.message;
+      }
+    }
+
+    function handleLogout() {
+      token = null;
+      localStorage.removeItem('token');
+      showLogin();
+    }
+
+    async function generateLesson() {
+      const topic = document.getElementById('lesson-topic').value;
+      const concept = document.getElementById('lesson-concept').value;
+      const lessonOutput = document.getElementById('lesson-output');
+      const errorDiv = document.getElementById('error');
+
+      if (!topic || !concept) {
+        errorDiv.textContent = 'Please enter both a topic and a core concept';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/api/course/lessons`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ topic, concept })
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(`Server responded with ${response.status}: ${text}`);
+        }
+
+        const data = await response.json();
+        lessonOutput.innerHTML = `<h4>Lesson on ${data.title}</h4>
+          <p><strong>Description:</strong> ${data.description}</p>
+          <p><strong>Outcomes:</strong> ${data.outcomes.join(', ')}</p>
+          <p><strong>Concepts:</strong> ${data.concepts.map(c => `${c.term}: ${c.definition}`).join('; ')}</p>
+          <p><strong>Activities:</strong> ${data.activities.join(', ')}</p>`;
+        errorDiv.textContent = '';
+      } catch (err) {
+        errorDiv.textContent = 'Error: ' + err.message;
+      }
+    }
+
+    // Check if already logged in
+    if (token) {
+      showDashboard();
+    }
+  </script>
+</body>
+</html>

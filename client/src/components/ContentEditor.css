@@ -1,0 +1,125 @@
+/* Ensure the component takes up the full page */
+.content-editor-container {
+    width: 100vw; /* Full viewport width */
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9fafb; /* Light gray background for the page */
+    padding: 2rem; /* Padding for spacing */
+    box-sizing: border-box;
+    overflow-y: auto; /* Allow scrolling if content overflows */
+  }
+  
+  /* Style the main content area */
+  .content-editor {
+    width: 100%;
+    max-width: 1200px; /* Max width for larger screens */
+    background-color: #ffffff; /* White background for the content */
+    border-radius: 0.5rem; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 2rem; /* Inner padding */
+    margin-bottom: 2rem; /* Space at the bottom */
+  }
+  
+  /* Style the title */
+  .content-editor h2 {
+    font-size: 2rem; /* Larger font size for the title */
+    font-weight: 700; /* Bold */
+    color: #1f2937; /* Dark gray color */
+    margin-bottom: 1.5rem; /* Space below the title */
+  }
+  
+  /* Style labels */
+  .content-editor label {
+    font-size: 1.1rem; /* Slightly larger font for labels */
+    font-weight: 600; /* Medium bold */
+    color: #374151; /* Dark gray */
+    margin-bottom: 0.5rem; /* Space below labels */
+  }
+  
+  /* Style textareas and inputs */
+  .content-editor textarea,
+  .content-editor input {
+    width: 100%; /* Full width */
+    border: 1px solid #d1d5db; /* Light gray border */
+    border-radius: 0.375rem; /* Rounded corners */
+    padding: 0.75rem; /* Inner padding */
+    font-size: 1rem; /* Standard font size */
+    color: #1f2937; /* Dark gray text */
+    background-color: #f9fafb; /* Light gray background */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Smooth transitions */
+  }
+  
+  /* Focus state for inputs and textareas */
+  .content-editor textarea:focus,
+  .content-editor input:focus {
+    border-color: #4f46e5; /* Indigo border on focus */
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); /* Subtle glow */
+    outline: none; /* Remove default outline */
+  }
+  
+  /* Style the outcomes and activities lists */
+  .content-editor .list-item {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 0.5rem;
+  }
+  
+  .content-editor .list-item span {
+    margin-right: 0.5rem;
+    color: #6b7280; /* Gray bullet color */
+  }
+  
+  /* Style the concepts section */
+  .content-editor .concept-card {
+    background-color: #f3f4f6; /* Light gray background for concept cards */
+    padding: 1rem; /* Inner padding */
+    border-radius: 0.375rem; /* Rounded corners */
+    margin-top: 0.5rem;
+  }
+  
+  /* Style buttons */
+  .content-editor button {
+    padding: 0.5rem 1rem; /* Padding for buttons */
+    border-radius: 0.375rem; /* Rounded corners */
+    font-weight: 500; /* Medium bold */
+    color: #ffffff; /* White text */
+    transition: background-color 0.2s ease; /* Smooth background transition */
+  }
+  
+  /* Specific button styles */
+  .content-editor .regenerate-button {
+    background-color: #d97706; /* Yellow for regenerate buttons */
+  }
+  
+  .content-editor .regenerate-button:hover {
+    background-color: #b45309; /* Darker yellow on hover */
+  }
+  
+  .content-editor .save-button {
+    background-color: #4f46e5; /* Indigo for save button */
+  }
+  
+  .content-editor .save-button:hover {
+    background-color: #4338ca; /* Darker indigo on hover */
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .content-editor-container {
+      padding: 1rem; /* Reduced padding on smaller screens */
+    }
+  
+    .content-editor {
+      padding: 1rem; /* Reduced padding */
+    }
+  
+    .content-editor h2 {
+      font-size: 1.5rem; /* Smaller title on mobile */
+    }
+  
+    .content-editor label {
+      font-size: 1rem; /* Smaller labels on mobile */
+    }
+  }
